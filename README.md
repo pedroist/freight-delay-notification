@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## About
+Next.js application that monitors traffic delays on freight delivery routes and notifies customers when significant delays occur. The system will use Temporal for workflow orchestration, integrating with traffic APIs, OpenAI for message generation, and a notification service.
 
-## Getting Started
+## Features
+- Monitor traffic delays on freight delivery routes
+- Notify customers when significant delays occur
+- Use Temporal for workflow orchestration
+- Integrate with traffic APIs
 
-First, run the development server:
+## Setup
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Create a `.env.local` file and add your API keys and configuration
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+# APIKeys
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+SENDGRID_API_KEY=your_sendgrid_key
+SENDGRID_FROM_EMAIL=your_verified_sender_email
+
+# Configuration
+DELAY_THRESHOLD_MINUTES=30
+TEMPORAL_ADDRESS=localhost:7233
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running the application
+1. Start the Temporal server: `temporal server start`
+2. Start the Next.js application: `npm run dev`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Notes:
+1. Used React Query for the api requests
+2. Used Temporal for the workflow orchestration
+3. Used OpenAI for the message generation
+4. Used SendGrid for the notification service
+5. Used Google Maps API for the traffic data
+6. Used Material UI for the frontend
+7. Installed the following google maps libraries:
+- @react-google-maps/api
+- @googlemaps/google-maps-services-js
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+These provide access to:
+- Google Places API - used for the autocomplete functionality when users type in origin and destination addresses
+- Google Directions API - used to calculate travel times with and without traffic, which is essential for determining delays.
+9. Synchronous blocking request to the temporal server, since the response time is not long, to be able to get all the needed data and render a confirmation page to the user.
+8. In the file src/components/providers/ReactQueryProvider.tsx, the following config options were added by the following reasons:
+- **refetchOnWindowFocus: false** - to prevent the api from refetching when the window is focused
 
-## Learn More
+- **retry: 1** -To prevent the API from retrying 3 times when it fails, setting it to 1, to improve the user experience (not making users wait too long for a response).
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
