@@ -29,6 +29,15 @@ TEMPORAL_ADDRESS=localhost:7233
 1. Start the Temporal server: `temporal server start`
 2. Start the Next.js application: `npm run dev`
 
+## Application flow according to this architecture:
+
+1. The client (browser) submits a route monitoring request
+2. The Next.js API route receives this request
+3. The API route calls the Temporal client to start a workflow
+4. The Temporal worker (running as a separate process) executes the workflow
+5. The workflow activities call these utility functions (getTrafficInfo, generateDelayMessage)
+
+
 ## Notes:
 1. Used React Query for the api requests
 2. Used Temporal for the workflow orchestration
