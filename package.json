@@ -18,7 +18,9 @@
     "@temporalio/client": "^1.11.7",
     "@temporalio/worker": "^1.11.7",
     "@temporalio/workflow": "^1.11.7",
+    "axios": "^1.8.4",
     "next": "15.2.3",
+    "openai": "^4.89.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
