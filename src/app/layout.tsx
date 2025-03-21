@@ -1,43 +1,11 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+'use client';
+
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
+import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
+import { AppBar, Toolbar, Typography, Container, CssBaseline, ThemeProvider } from '@mui/material';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Create a theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-  typography: {
-    fontFamily: [
-      'var(--font-geist-sans)',
-      'Arial',
-      'sans-serif',
-    ].join(','),
-  },
-});
-
-export const metadata: Metadata = {
-  title: "Freight Delay Notification",
-  description: "Monitor traffic delays on freight delivery routes",
-};
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -45,14 +13,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
-        <ThemeProvider theme={theme}>
+    <html lang="en">
+      <body className={inter.className}>
+        <ReactQueryProvider>
           <CssBaseline />
-          <ReactQueryProvider>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h6">
+                Freight Delay Notification
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Container sx={{ py: 4 }}>
             {children}
-          </ReactQueryProvider>
-        </ThemeProvider>
+          </Container>
+        </ReactQueryProvider>
       </body>
     </html>
   );
