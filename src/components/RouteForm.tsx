@@ -7,8 +7,7 @@ import {
   Paper, 
   CircularProgress 
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
-import { monitorRoute } from '@/api/endpoints';
+import { useRouteMonitoring } from '@/hooks/useRouteMonitoring';
 import { RouteData, MonitoringResult } from '@/types';
 
 interface RouteFormProps {
@@ -16,8 +15,7 @@ interface RouteFormProps {
 }
 
 const RouteForm = ({ onSuccess }: RouteFormProps) => {
-  const [formData, setFormData] = useState<RouteData
-  >({
+  const [formData, setFormData] = useState<RouteData>({
     origin: '',
     destination: '',
     customerName: '',
@@ -26,14 +24,9 @@ const RouteForm = ({ onSuccess }: RouteFormProps) => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: monitorRoute,
-    onSuccess: (data) => {
-      onSuccess(data);
-    },
-  });
+  const { mutate, isPending } = useRouteMonitoring();
 
-  const validateForm = (): boolean => {
+  const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
     if (!formData.origin) newErrors.origin = 'Origin is required';
@@ -54,7 +47,11 @@ const RouteForm = ({ onSuccess }: RouteFormProps) => {
     e.preventDefault();
     
     if (validateForm()) {
-      mutate(formData);
+      mutate(formData, {
+        onSuccess: (data) => {
+          onSuccess(data);
+        }
+      });
     }
   };
 
