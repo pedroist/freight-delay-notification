@@ -10,7 +10,6 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { monitorRoute } from '@/api/endpoints';
 import { RouteData, MonitoringResult } from '@/types';
-import GooglePlacesAutocomplete from '@/components/GooglePlacesAutocomplete';
 
 interface RouteFormProps {
   onSuccess: (result: MonitoringResult) => void;
@@ -79,23 +78,29 @@ const RouteForm = ({ onSuccess }: RouteFormProps) => {
       </Typography>
       
       <Box component="form" onSubmit={handleSubmit} noValidate>
-        <GooglePlacesAutocomplete
+        {/* Replaced GooglePlacesAutocomplete with TextField */}
+        <TextField
+          fullWidth
           label="Origin"
           value={formData.origin}
-          onChange={(value) => handleChange('origin', value)}
+          onChange={(e) => handleChange('origin', e.target.value)}
           required
           error={!!errors.origin}
-          helperText={errors.origin}
+          helperText={errors.origin || 'Enter a full address (e.g., 123 Main St, New York, NY)'}
+          placeholder="123 Main St, New York, NY"
         />
         
         <Box sx={{ mt: 2 }}>
-          <GooglePlacesAutocomplete
+          {/* Replaced GooglePlacesAutocomplete with TextField */}
+          <TextField
+            fullWidth
             label="Destination"
             value={formData.destination}
-            onChange={(value) => handleChange('destination', value)}
+            onChange={(e) => handleChange('destination', e.target.value)}
             required
             error={!!errors.destination}
-            helperText={errors.destination}
+            helperText={errors.destination || 'Enter a full address (e.g., 456 Park Ave, Boston, MA)'}
+            placeholder="456 Park Ave, Boston, MA"
           />
         </Box>
         
