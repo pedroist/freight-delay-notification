@@ -79,7 +79,11 @@ TEMPORAL_ADDRESS=localhost:7233
 
 
 ## Notes:
-1. Used React Query for the api requests
+1. Used React Query API for the requests through a custom hook (`useRouteMonitoring.ts`). This provides several advantages:
+   - Simplified data fetching with built-in loading and error states
+   - Automatic request state management (loading, error, success)
+   - Configurable retry logic (limited to 1 retry to improve user experience)
+   - Consistent error handling across the application
 2. Used Temporal for the workflow orchestration
 3. Used OpenAI for the message generation
 4. Used SendGrid for the notification service
