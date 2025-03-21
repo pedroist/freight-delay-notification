@@ -10,7 +10,10 @@
     "worker:dev": "cd temporal && npm run dev",
     "worker:build": "cd temporal && npm run build",
     "worker:start": "cd temporal && npm run start",
-    "dev:all": "concurrently \"npm run dev\" \"npm run worker:dev\""
+    "temporal:server": "temporal server start-dev",
+    "dev:worker": "concurrently \"npm run dev\" \"npm run worker:dev\"",
+    "dev:all": "concurrently \"temporal server start-dev\" \"npm run dev\" \"npm run worker:dev\"",
+    "dev:all:windows": "concurrently \"npx temporal server start-dev\" \"npm run dev\" \"npm run worker:dev\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
