@@ -23,14 +23,19 @@ export async function generateDelayMessage(
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant that generates personalized delay notifications for freight deliveries."
+          content: "You are a helpful assistant that generates personalized delay notifications for freight deliveries. Generate ONLY the message body, not the subject line or signature. Do not include placeholders like [Your Name] or [Your Company]."
         },
         {
           role: "user",
-          content: `Generate a brief, professional message for ${customerName} about a delivery delay. 
+          content: `Generate a brief, professional message body for ${customerName} about a delivery delay. 
           The route is from ${origin} to ${destination}. 
           The delay is ${trafficInfo.delayInMinutes} minutes due to traffic conditions.
-          Keep it concise and informative.`
+          
+          Important:
+          1. Do NOT include a subject line
+          2. Do NOT include placeholders like [Your Name] or [Your Company]
+          3. Sign the message with the customer's name (${customerName})
+          4. Keep it concise and informative`
         }
       ],
       temperature: 0.7,
@@ -41,6 +46,6 @@ export async function generateDelayMessage(
     console.error("Error generating delay message:", error);
     
     // Provide a fallback message when API fails
-    return `Dear ${customerName}, we're experiencing a ${trafficInfo.delayInMinutes}-minute delay on your delivery from ${origin} to ${destination} due to traffic conditions. We apologize for any inconvenience.`;
+    return `Dear ${customerName},\n\nWe wanted to inform you that your delivery from ${origin} to ${destination} is experiencing a delay of approximately ${trafficInfo.delayInMinutes} minutes due to traffic conditions.\n\nWe appreciate your understanding and will keep you updated on the status.\n\nBest regards,\n${customerName}`;
   }
 } 
