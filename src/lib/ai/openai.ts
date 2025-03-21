@@ -1,7 +1,6 @@
 import OpenAI from 'openai';
 import { TrafficInfo } from '@/types';
 
-// Create a function that returns the OpenAI client instead of initializing it at module level
 function getOpenAIClient() {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -17,28 +16,31 @@ export async function generateDelayMessage(
   trafficInfo: TrafficInfo
 ): Promise<string> {
   try {
-    // Get the OpenAI client when the function is called
     const openai = getOpenAIClient();
     
-    const prompt = `
-      You are a freight delivery notification service. Write a brief, professional message to ${customerName} 
-      informing them of a delay in their delivery due to traffic conditions.
-      
-      Route: From ${origin} to ${destination}
-      Delay: ${trafficInfo.delayInMinutes} minutes
-      
-      Keep the message concise, professional, and empathetic. Include the specific delay time and route information.
-    `;
-
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 200,
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that generates personalized delay notifications for freight deliveries."
+        },
+        {
+          role: "user",
+          content: `Generate a brief, professional message for ${customerName} about a delivery delay. 
+          The route is from ${origin} to ${destination}. 
+          The delay is ${trafficInfo.delayInMinutes} minutes due to traffic conditions.
+          Keep it concise and informative.`
+        }
+      ],
+      temperature: 0.7,
     });
 
-    return response.choices[0].message.content || 'We regret to inform you that your delivery will be delayed due to traffic conditions.';
+    return response.choices[0].message.content || "We're experiencing a delivery delay due to traffic conditions.";
   } catch (error) {
-    console.error('Error generating delay message:', error);
-    return `Dear ${customerName}, we regret to inform you that your delivery from ${origin} to ${destination} will be delayed by approximately ${trafficInfo.delayInMinutes} minutes due to traffic conditions. We apologize for any inconvenience.`;
+    console.error("Error generating delay message:", error);
+    
+    // Provide a fallback message when API fails
+    return `Dear ${customerName}, we're experiencing a ${trafficInfo.delayInMinutes}-minute delay on your delivery from ${origin} to ${destination} due to traffic conditions. We apologize for any inconvenience.`;
   }
 } 
