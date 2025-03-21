@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node lib/index.js",
-        "dev": "ts-node src/index.ts"
+        "dev": "ts-node -r tsconfig-paths/register src/index.ts"
     },
     "dependencies": {
         "@temporalio/activity": "^1.8.0",
@@ -16,6 +16,7 @@
     },
     "devDependencies": {
         "ts-node": "^10.9.1",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^5.0.4"
     }
 }

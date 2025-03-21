@@ -10,7 +10,7 @@ export interface RouteData {
 export interface TrafficInfo {
   durationWithoutTraffic: number; // in seconds
   durationWithTraffic: number; // in seconds
-  distance: number; // in meters
+  distanceMeters: number; // in meters
   delay: number; // in seconds (durationWithTraffic - durationWithoutTraffic)
   delayInMinutes: number; // delay converted to minutes
   exceedsThreshold: boolean;

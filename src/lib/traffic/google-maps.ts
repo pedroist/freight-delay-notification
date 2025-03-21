@@ -6,6 +6,10 @@ export async function getTrafficInfo(origin: string, destination: string): Promi
     const apiKey = process.env.GOOGLE_MAPS_API_KEY as string;
     const baseUrl = 'https://routes.googleapis.com/directions/v2:computeRoutes';
     
+    // Set departure time to 5 minutes in the future
+    const departureTime = new Date();
+    departureTime.setMinutes(departureTime.getMinutes() + 5);
+    
     // Get route with traffic
     const trafficResponse = await axios.post(
       baseUrl,
@@ -19,7 +23,7 @@ export async function getTrafficInfo(origin: string, destination: string): Promi
         travelMode: 'DRIVE',
         routingPreference: 'TRAFFIC_AWARE',
         computeAlternativeRoutes: false,
-        departureTime: new Date().toISOString()
+        departureTime: departureTime.toISOString()
       },
       {
         headers: {
@@ -66,7 +70,8 @@ export async function getTrafficInfo(origin: string, destination: string): Promi
     // Parse duration strings like "1234s" to get seconds
     const durationWithTraffic = parseInt(trafficRoute.duration.replace('s', ''), 10);
     const durationWithoutTraffic = parseInt(noTrafficRoute.duration.replace('s', ''), 10);
-    
+    const distanceMeters = trafficRoute.distanceMeters;
+
     const delay = durationWithTraffic - durationWithoutTraffic;
     const delayInMinutes = Math.round(delay / 60);
     const thresholdInMinutes = parseInt(process.env.DELAY_THRESHOLD_MINUTES || '30', 10);
@@ -74,7 +79,7 @@ export async function getTrafficInfo(origin: string, destination: string): Promi
     return {
       durationWithoutTraffic,
       durationWithTraffic,
-      distance: parseInt(trafficRoute.distanceMeters.toString(), 10),
+      distanceMeters,
       delay,
       delayInMinutes,
       exceedsThreshold: delayInMinutes >= thresholdInMinutes,

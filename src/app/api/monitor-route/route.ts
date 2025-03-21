@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { monitorRoute } from '@/lib/temporal/client';
 import { ApiResponse, MonitoringResult, RouteData } from '@/types';
 
+export async function GET() {
+  return NextResponse.json(
+    { 
+      success: true, 
+      message: "Freight monitoring API is working!" 
+    },
+    { status: 200 }
+  );
+}
+
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<ApiResponse<MonitoringResult>>> {

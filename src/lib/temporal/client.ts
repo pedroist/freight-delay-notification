@@ -1,5 +1,4 @@
 import { Connection, Client } from '@temporalio/client';
-import { MonitorRouteWorkflow } from './workflows';
 import { RouteData, MonitoringResult } from '@/types';
 
 // Create a Temporal client connection
@@ -19,7 +18,7 @@ export async function monitorRoute(routeData: RouteData): Promise<MonitoringResu
     const client = await getTemporalClient();
     
     // Execute the monitoring workflow - synchronous blocking request (start instead of would be async)
-    const result = await client.workflow.execute('MonitorRouteWorkflow', {
+    const result = await client.workflow.execute('monitorRouteWorkflow', {
       args: [routeData],
       taskQueue: 'freight-monitoring',
       workflowId: `route-monitor-${Date.now()}`,

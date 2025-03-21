@@ -1,9 +1,14 @@
 import OpenAI from 'openai';
 import { TrafficInfo } from '@/types';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Create a function that returns the OpenAI client instead of initializing it at module level
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is missing');
+  }
+  return new OpenAI({ apiKey });
+}
 
 export async function generateDelayMessage(
   customerName: string,
@@ -12,45 +17,28 @@ export async function generateDelayMessage(
   trafficInfo: TrafficInfo
 ): Promise<string> {
   try {
+    // Get the OpenAI client when the function is called
+    const openai = getOpenAIClient();
+    
     const prompt = `
-      Generate a friendly, professional message to a customer about a freight delivery delay.
+      You are a freight delivery notification service. Write a brief, professional message to ${customerName} 
+      informing them of a delay in their delivery due to traffic conditions.
       
-      Customer name: ${customerName}
-      Origin: ${origin}
-      Destination: ${destination}
+      Route: From ${origin} to ${destination}
       Delay: ${trafficInfo.delayInMinutes} minutes
       
-      The message should:
-      1. Address the customer by name
-      2. Explain that there's a traffic delay on their freight delivery route
-      3. Specify the delay time in minutes
-      4. Apologize for the inconvenience
-      5. Assure them we're monitoring the situation
-      6. Keep it concise (max 3-4 sentences)
+      Keep the message concise, professional, and empathetic. Include the specific delay time and route information.
     `;
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a helpful freight delivery notification assistant.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
       max_tokens: 200,
     });
 
-    return response.choices[0].message.content?.trim() || getFallbackMessage(customerName, trafficInfo.delayInMinutes);
+    return response.choices[0].message.content || 'We regret to inform you that your delivery will be delayed due to traffic conditions.';
   } catch (error) {
     console.error('Error generating delay message:', error);
-    return getFallbackMessage(customerName, trafficInfo.delayInMinutes);
+    return `Dear ${customerName}, we regret to inform you that your delivery from ${origin} to ${destination} will be delayed by approximately ${trafficInfo.delayInMinutes} minutes due to traffic conditions. We apologize for any inconvenience.`;
   }
-}
-
-function getFallbackMessage(customerName: string, delayInMinutes: number): string {
-  return `Dear ${customerName}, we wanted to inform you that your freight delivery is currently experiencing a delay of approximately ${delayInMinutes} minutes due to traffic conditions. We apologize for any inconvenience and are monitoring the situation closely.`;
 } 

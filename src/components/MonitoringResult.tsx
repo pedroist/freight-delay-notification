@@ -35,7 +35,7 @@ const ResultDisplay = ({ result }: ResultDisplayProps) => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="body2">Distance:</Typography>
             <Typography variant="body2" fontWeight="medium">
-              {formatDistance(trafficInfo.distance)}
+              {formatDistance(trafficInfo.distanceMeters)}
             </Typography>
           </Box>
           
