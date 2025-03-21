@@ -18,17 +18,13 @@ export async function monitorRoute(routeData: RouteData): Promise<MonitoringResu
   try {
     const client = await getTemporalClient();
     
-    // Start a new workflow execution
-    const handle = await client.workflow.start('MonitorRouteWorkflow', {
+    // Execute the monitoring workflow - synchronous blocking request (start instead of would be async)
+    const result = await client.workflow.execute('MonitorRouteWorkflow', {
       args: [routeData],
       taskQueue: 'freight-monitoring',
       workflowId: `route-monitor-${Date.now()}`,
     });
-    
-    console.log(`Started workflow with ID: ${handle.workflowId}`);
-    
-    // Wait for the workflow to complete
-    const result = await handle.result();
+
     return result;
   } catch (error) {
     console.error('Error executing Temporal workflow:', error);
