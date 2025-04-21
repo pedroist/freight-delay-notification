@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { RouteData, MonitoringResult } from '@/types';
+import { RouteData } from '@/types';
 import { monitorRoute } from '@/api/endpoints';
 
 export function useRouteMonitoring() {

@@ -19,7 +19,7 @@ async function run() {
   // Create a Worker
   const worker = await Worker.create({
     workflowsPath: require.resolve('./workflows'),
-    activities,
+    activities, // This is where we register the activities
     taskQueue: 'freight-monitoring',
   });
 

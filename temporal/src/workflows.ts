@@ -1,8 +1,8 @@
 import { proxyActivities } from '@temporalio/workflow';
-import { Activities } from '@app/lib/temporal/workflows';
-import { RouteData, NotificationData, MonitoringResult } from '../../src/types';
+import { Activities } from './types';
+import { RouteData, NotificationData, MonitoringResult } from '@app/types';
 
-// Define activities
+// Create activities proxy
 const activities = proxyActivities<Activities>({
   startToCloseTimeout: '10 seconds',
   retry: {
